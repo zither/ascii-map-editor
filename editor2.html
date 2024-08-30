@@ -79,6 +79,8 @@
         let viewY = 0;
         let selectedChar = 'X';
         let selectedColor = '#000000';
+            let gridWidth = 14;
+            let gridHeight = 10;
 
             let mapWidth = 0;
             let mapHeight = 0;
@@ -107,8 +109,8 @@
         ctx.fillStyle = '#000000'; // 设置背景颜色为黑色
         ctx.fillRect(0, 0, canvas.width, canvas.height); // 填充背景颜色
         ctx.font = '12px monospace';
-        for (let y = 0; y < 30; y++) {
-            for (let x = 0; x < 50; x++) {
+        for (let y = 0; y < gridHeight; y++) {
+            for (let x = 0; x < gridWidth; x++) {
                 const mapX = viewX + x;
                 const mapY = viewY + y;
                 if (mapX < mapWidth && mapY < mapHeight && mapData[mapY] && mapData[mapY][mapX]) {
@@ -133,13 +135,13 @@
 
         document.addEventListener('keydown', function(event) {
             if (event.key === 'ArrowRight') {
-                viewX = Math.min(viewX + 25, mapWidth - 50);
+                viewX = Math.min(viewX + (gridWidth / 2), mapWidth - gridWidth);
             } else if (event.key === 'ArrowLeft') {
-                viewX = Math.max(viewX - 25, 0);
+                viewX = Math.max(viewX - (gridWidth / 2), 0);
             } else if (event.key === 'ArrowDown') {
-                viewY = Math.min(viewY + 15, mapHeight - 30);
+                viewY = Math.min(viewY + (gridHeight / 2), mapHeight - gridHeight);
             } else if (event.key === 'ArrowUp') {
-                viewY = Math.max(viewY - 15, 0);
+                viewY = Math.max(viewY - (gridHeight / 2), 0);
             }
             renderMap();
         });
