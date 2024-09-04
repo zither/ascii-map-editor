@@ -23,7 +23,7 @@
         <input type="number" id="startY" value="0" style="width: 60px;">
         <button type="submit">加载地图</button>
     </form>
-    <div>
+    <div id="char-buttons">
         <button class="char-button" data-char="#" data-color="#777777" title="建筑">#</button>
         <button class="char-button" data-char="%" data-color="#FFFFFF" title="特殊地点">%</button>
         <button class="char-button" data-char="," data-color="#777777" title="乡间小路">,</button>
@@ -44,7 +44,6 @@
         <button class="char-button" data-char="~" data-color="#0000AA" title="海洋">~</button>
         <button class="char-button" data-char="+" data-color="#777777" title="路口">+</button>
         <button class="char-button" data-char="-" data-color="#777777" title="路">-</button>
-        <br>
         <button class="char-button" data-char="|" data-color="#777777" title="路">|</button>
         <button class="char-button" data-char="\" data-color="#777777" title="路">\</button>
         <button class="char-button" data-char="/" data-color="#777777" title="路">/</button>
@@ -199,7 +198,7 @@
                 const mapX = viewX + x;
                 const mapY = viewY + y;
                 if (mapX < mapWidth && mapY < mapHeight && mapData[mapY] && mapData[mapY][mapX]) {
-                    if (event.button === 0) { // 左键点击
+                    if (event.button === 1) { // 左键点击
                         mapData[mapY][mapX] = selectedChar;
                         renderMap();
                     }
