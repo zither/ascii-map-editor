@@ -1,20 +1,75 @@
+const chars = [
+    { char: "#", color: "#777777", title: "建筑" },
+    { char: "%", color: "#FFFFFF", title: "特殊地点" },
+    { char: ",", color: "#777777", title: "乡间小路" },
+    { char: ".", color: "#00AA00", title: "平地" },
+    { char: "?", color: "#FFFF00", title: "区域地点" },
+    { char: "C", color: "#777777", title: "玩家建筑" },
+    { char: "H", color: "#770077", title: "高原" },
+    { char: "R", color: "#0000AA", title: "大江" },
+    { char: "V", color: "#AA0000", title: "火山" },
+    { char: "b", color: "#AAAA00", title: "沙滩" },
+    { char: "d", color: "#AAAA00", title: "沙漠" },
+    { char: "h", color: "#770077", title: "丘陵" },
+    { char: "j", color: "#00AA00", title: "丛林" },
+    { char: "r", color: "#0000FF", title: "河流" },
+    { char: "t", color: "#00FF00", title: "苔原" },
+    { char: "w", color: "#00FFFF", title: "瀑布" },
+    { char: "y", color: "#AAAA00", title: "草原" },
+    { char: "~", color: "#0000AA", title: "海洋" },
+    { char: "+", color: "#777777", title: "路口" },
+    { char: "-", color: "#777777", title: "路" },
+    { char: "|", color: "#777777", title: "路" },
+    { char: "\\", color: "#777777", title: "路" },
+    { char: "/", color: "#777777", title: "路" },
+    { char: "=", color: "#777777", title: "桥" },
+    { char: "$", color: "#FF0000", title: "岩浆" },
+    { char: "F", color: "#00AA00", title: "原始森林" },
+    { char: "L", color: "#FF0000", title: "岩浆湖" },
+    { char: "S", color: "#00FFFF", title: "浅滩" },
+    { char: "^", color: "#FF00FF", title: "高山" },
+    { char: "c", color: "#777777", title: "城镇" },
+    { char: "f", color: "#00FF00", title: "树林" },
+    { char: "i", color: "#FFFFFF", title: "冰" },
+    { char: "l", color: "#0000FF", title: "湖泊" },
+    { char: "s", color: "#EE0000", title: "沼泽" },
+    { char: "v", color: "#00FF00", title: "山谷" },
+    { char: "x", color: "#777777", title: "荒原" },
+    { char: "z", color: "#FFFF00", title: "海岸" },
+    { char: "@", color: "#FFFFFF", title: "自己" },
+    { char: "m", color: "#EE0000", title: "怪物" }
+];
+
+
 const toolbar = document.querySelector('.toolbar');
 const resizeHandle = document.querySelector('.resize-handle');
 const mapContainer = document.querySelector('.map-container');
 
 let isResizing = false;
 let initialWidth = toolbar.offsetWidth;
+let initialX = 0; // 记录鼠标按下时的初始X坐标
 
 resizeHandle.addEventListener('mousedown', (e) => {
   isResizing = true;
   initialWidth = toolbar.offsetWidth;
+  initialX = e.clientX; // 记录鼠标按下时的初始X坐标
 });
 
 document.addEventListener('mousemove', (e) => {
   if (isResizing) {
-    const newWidth = initialWidth + e.clientX;
+    const deltaX = e.clientX - initialX; // 计算鼠标移动的距离
+    const newWidth = initialWidth + deltaX;
     toolbar.style.width = `${newWidth}px`;
     mapContainer.style.width = `calc(100% - ${newWidth}px)`;
+
+    // 重新计算 gridWidth 和 gridHeight
+    const containerWidth = mapContainer.clientWidth;
+    const containerHeight = mapContainer.clientHeight;
+    gridWidth = Math.floor(containerWidth / 16); // 每个字符的宽度为16像素
+    gridHeight = Math.floor(containerHeight / 24); // 每个字符的高度为24像素
+
+    // 重新渲染地图
+    renderMap();
   }
 });
 
@@ -22,42 +77,8 @@ document.addEventListener('mouseup', () => {
   isResizing = false;
 });
 
-const chars = [
-  { char: "#", color: "#777777", title: "建筑" },
-  { char: "%", color: "#FFFFFF", title: "特殊地点" },
-  { char: ",", color: "#777777", title: "乡间小路" },
-  { char: ".", color: "#00AA00", title: "平地" },
-  { char: "?", color: "#FFFF00", title: "区域地点" },
-  { char: "C", color: "#777777", title: "玩家建筑" },
-  { char: "H", color: "#770077", title: "高原" },
-  { char: "R", color: "#0000AA", title: "大江" },
-  { char: "V", color: "#AA0000", title: "火山" },
-  { char: "b", color: "#AAAA00", title: "沙滩" },
-  { char: "d", color: "#AAAA00", title: "沙漠" },
-  { char: "h", color: "#770077", title: "丘陵" },
-  { char: "j", color: "#00AA00", title: "丛林" },
-  { char: "r", color: "#0000FF", title: "河流" },
-  { char: "t", color: "#00FF00", title: "苔原" },
-  { char: "w", color: "#00FFFF", title: "瀑布" },
-  { char: "y", color: "#AAAA00", title: "草原" },
-  { char: "~", color: "#0000AA", title: "海洋" },
-  { char: "+", color: "#777777", title: "路口" },
-  { char: "-", color: "#777777", title: "路" },
-  { char: "|", color: "#777777", title: "路" },
-  { char: "\\", color: "#777777", title: "路" },
-  { char: "/", color: "#777777", title: "路" },
-  { char: "=", color: "#777777", title: "桥" },
-  { char: "$", color: "#FF0000", title: "岩浆" },
-  { char: "f", color: "#00FF00", title: "树林" },
-  { char: "i", color: "#FFFFFF", title: "冰" },
-  { char: "l", color: "#0000FF", title: "湖泊" },
-  { char: "s", color: "#EE0000", title: "沼泽" },
-  { char: "v", color: "#00FF00", title: "山谷" },
-  { char: "x", color: "#777777", title: "荒原" },
-  { char: "z", color: "#FFFF00", title: "海岸" },
-  { char: "@", color: "#FFFFFF", title: "自己" },
-  { char: "m", color: "#EE0000", title: "怪物" },
-];
+
+
 
 const charButtonsDiv = document.querySelector('#char-buttons');
 
@@ -89,6 +110,16 @@ let gridHeight = 20;
 
 let mapWidth = 0;
 let mapHeight = 0;
+
+window.onload = function() {
+    const mapContainer = document.getElementsByClassName('map-container')[0];
+    if (mapContainer) {
+        const containerWidth = mapContainer.clientWidth;
+        const containerHeight = mapContainer.clientHeight;
+        gridWidth = Math.floor(containerWidth / 16); // 每个字符的宽度为16像素
+        gridHeight = Math.floor(containerHeight / 24); // 每个字符的高度为24像素
+    }
+};
 
 document.getElementById('loadForm').addEventListener('submit', function (event) {
     event.preventDefault();
