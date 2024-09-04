@@ -61,8 +61,8 @@
         <button class="char-button" data-char="@" data-color="#FFFFFF" title="自己">@</button>
         <button class="char-button" data-char="m" data-color="#EE0000" title="怪物">m</button>
     </div>
-    <canvas id="mapCanvas" width="800" height="720"></canvas>
-    <div>当前定点坐标: <span id="coords">0, 0</span>
+    <canvas id="mapCanvas" width="800" height="480"></canvas>
+    <div>当前顶点坐标: <span id="coords">0, 0</span>
         <button id="moveUp">Up</button>
         <button id="moveDown">Down</button>
         <button id="moveLeft">Left</button>
@@ -80,7 +80,7 @@
         let selectedChar = 'X';
         let selectedColor = '#000000';
             let gridWidth = 50;
-            let gridHeight = 30;
+            let gridHeight = 20;
 
             let mapWidth = 0;
             let mapHeight = 0;
@@ -105,6 +105,8 @@
             });
 
     function renderMap() {
+        canvas.width = gridWidth * 16; // 每个字符的宽度为16像素
+        canvas.height = gridHeight * 24; // 每个字符的高度为24像素
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.fillStyle = '#000000'; // 设置背景颜色为黑色
         ctx.fillRect(0, 0, canvas.width, canvas.height); // 填充背景颜色
@@ -122,6 +124,7 @@
         }
         document.getElementById('coords').textContent = `${viewX}, ${viewY}`;
     }
+
 
         function getColorForChar(char) {
             //const button = document.querySelector(`.char-button[data-char="${char}"]`);
@@ -146,19 +149,22 @@
             renderMap();
         });
 
-        canvas.addEventListener('mousemove', function(event) {
-            if (event.ctrlKey) {
+            canvas.addEventListener('mousemove', function (event) {
                 const rect = canvas.getBoundingClientRect();
                 const x = Math.floor((event.clientX - rect.left) / 16);
                 const y = Math.floor((event.clientY - rect.top) / 24);
                 const mapX = viewX + x;
                 const mapY = viewY + y;
-                if (mapX < mapWidth && mapY < mapHeight && mapData[mapY] && mapData[mapY][mapX]) {
-                    mapData[mapY][mapX] = selectedChar;
-                    renderMap();
+                document.getElementById('coords').textContent = `${viewX}, ${viewY} | 鼠标: ${mapX}, ${mapY}`;
+
+                if (event.ctrlKey) {
+                    if (mapX < mapWidth && mapY < mapHeight && mapData[mapY] && mapData[mapY][mapX]) {
+                        mapData[mapY][mapX] = selectedChar;
+                        renderMap();
+                    }
                 }
-            }
-        });
+            });
+
 
             document.getElementById('moveUp').addEventListener('click', function () {
                 viewY = Math.max(viewY - 1, 0);
