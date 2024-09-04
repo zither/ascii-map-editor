@@ -10,6 +10,7 @@
         }
         .char-button {
             margin: 2px;
+            font-family: 'Courier New', Courier, monospace;
         }
         #char-buttons {
           margin: 10px 0;
@@ -55,6 +56,9 @@
           width: 100%;
           height: 100%;
         }
+        h1 {
+          font-size: x-large;
+        }
     </style>
 </head>
 <body>
@@ -63,15 +67,16 @@
             <h1>ASCII 地图编辑器</h1>
             <form id="loadForm">
                 <input type="file" id="mapFile" accept=".txt">
-                <label for="startX">左上X坐标:</label>
+                <br>
+                <label for="startX">初始X坐标:</label>
                 <input type="number" id="startX" value="0" style="width: 60px;">
-                <label for="startY">左上Y坐标:</label>
+                <br>
+                <label for="startY">初始Y坐标:</label>
                 <input type="number" id="startY" value="0" style="width: 60px;">
+                <br>
                 <button type="submit">加载地图</button>
             </form>
             <div id="char-buttons"> </div>
-            <div>当前顶点坐标: <span id="coords">0, 0</span>
-            </div>
             <div>
               <button id="moveUp">Up</button>
               <button id="moveDown">Down</button>
@@ -79,6 +84,7 @@
               <button id="moveRight">Right</button>
             </div>
             <button id="exportButton">导出地图</button>
+            <div>当前顶点坐标: <span id="coords">0, 0</span></div>
         </div>
         <div class="resize-handle"></div>
         <div class="map-container">
