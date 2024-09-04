@@ -17,6 +17,10 @@
     <h1>ASCII 地图编辑器</h1>
     <form id="loadForm">
         <input type="file" id="mapFile" accept=".txt">
+        <label for="startX">左上X坐标:</label>
+        <input type="number" id="startX" value="0" style="width: 60px;">
+        <label for="startY">左上Y坐标:</label>
+        <input type="number" id="startY" value="0" style="width: 60px;">
         <button type="submit">加载地图</button>
     </form>
     <div>
@@ -96,8 +100,10 @@
                         mapData = content.split('\n').map(line => line.split(''));
                         mapHeight = mapData.length;
                         mapWidth = mapData[0].length;
-                        viewX = 0;
-                        viewY = 0;
+                        const startX = parseInt(document.getElementById('startX').value, 10);
+                        const startY = parseInt(document.getElementById('startY').value, 10);
+                        viewX = startX;
+                        viewY = startY;
                         renderMap();
                     };
                     reader.readAsText(file);
