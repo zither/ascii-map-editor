@@ -207,6 +207,7 @@ function setCharButtons() {
         button.textContent = char.char;
         charButtonsDiv.appendChild(button);
     });
+    setCharButtonsClickEvent();
 }
 
 function getColorForChar(char) {
@@ -286,10 +287,28 @@ canvas.addEventListener('mousedown', function (event) {
 
 document.querySelectorAll('.char-button').forEach(button => {
     button.addEventListener('click', function () {
+        // 获取当前点击按钮的属性和值
         selectedChar = button.getAttribute('data-char');
         selectedColor = button.getAttribute('data-color');
     });
 });
+
+function setCharButtonsClickEvent() {
+    document.querySelectorAll('.char-button').forEach(button => {
+        button.addEventListener('click', function () {
+            // 移除所有按钮的高亮样式
+            document.querySelectorAll('.char-button').forEach(btn => {
+                btn.style.backgroundColor = '';
+            });
+            // 获取当前点击按钮的属性和值
+            selectedChar = button.getAttribute('data-char');
+            selectedColor = button.getAttribute('data-color');
+            // 为当前点击的按钮添加高亮样式
+            button.style.backgroundColor = selectedColor;
+        });
+    });
+}
+
 
 document.getElementById('exportButton').addEventListener('click', function () {
     const exportedData = mapData.map(line => line.join('')).join('\n');

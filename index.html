@@ -81,6 +81,10 @@
         #clearDataFile {
           display: inline-block;
         }
+        .tips {
+          font-size: small;
+          color: #888;  
+        }
     </style>
 </head>
 <body>
@@ -116,6 +120,7 @@
             <button id="exportButton">导出地图</button>
             <div>当前顶点坐标: <span id="coords">0, 0</span></div>
             <div>当前鼠标坐标: <span id="mouse-coords">0, 0</span></div>
+            <div class="tips">选择字符后，按住ctrl键，鼠标经过的位置会自动替换。键盘方向键可以快速移动地图。</div>
         </div>
         <div class="resize-handle"></div>
         <div class="map-container">
