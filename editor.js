@@ -115,6 +115,8 @@ let backgroundColor = '#000000';
 let mapWidth = 0;
 let mapHeight = 0;
 
+let startX, startY, endX, endY;
+
 window.onload = function() {
     const mapContainer = document.getElementsByClassName('map-container')[0];
     if (mapContainer) {
@@ -221,6 +223,10 @@ function getColorForChar(char) {
 }
 
 document.addEventListener('keydown', function (event) {
+    if (event.key === 'Shift') {
+        createSelectionCanvas();
+        return;
+    }
     if (event.key === 'ArrowRight') {
         viewX = Math.min(viewX + xOffset, mapWidth - gridWidth);
     } else if (event.key === 'ArrowLeft') {
@@ -232,6 +238,85 @@ document.addEventListener('keydown', function (event) {
     }
     renderMap();
 });
+
+document.addEventListener('keyup', function (event) {
+    if (event.key === 'Shift') {
+        removeSelectionCanvas();
+    }
+});
+
+function createSelectionCanvas() {
+    selectionCanvas = document.createElement('canvas');
+
+    // 获取 mapCanvas 的父元素
+    const parentElement = mapCanvas.parentElement;
+
+    // 设置 selectionCanvas 的尺寸与 mapCanvas 一致
+    selectionCanvas.width = mapCanvas.width;
+    selectionCanvas.height = mapCanvas.height;
+
+    // 设置 selectionCanvas 的样式
+    selectionCanvas.style.position = 'absolute';
+    selectionCanvas.style.left = (mapCanvas.offsetLeft) + 'px';
+    selectionCanvas.style.top = (mapCanvas.offsetTop) + 'px';
+    selectionCanvas.style.zIndex = parseInt(window.getComputedStyle(mapCanvas).zIndex, 10) + 1;
+
+    selectionCtx = selectionCanvas.getContext('2d');
+
+    // 将 selectionCanvas 添加到 mapCanvas 的父元素中
+    parentElement.appendChild(selectionCanvas);
+
+    selectionCanvas.addEventListener('mousedown', (e) => {
+        isDrawing = true;
+        startX = e.offsetX;
+        startY = e.offsetY;
+    });
+
+    selectionCanvas.addEventListener('mousemove', (e) => {
+        if (!isDrawing) return;
+        endX = e.offsetX;
+        endY = e.offsetY;
+        drawSelectionBox();
+    });
+
+    selectionCanvas.addEventListener('mouseup', (e) => {
+        isDrawing = false;
+        endX = e.offsetX;
+        endY = e.offsetY;
+        replaceSelectedChars();
+    });
+}
+
+function removeSelectionCanvas() {
+    if (selectionCanvas) {
+        selectionCanvas.remove();
+        selectionCanvas = null;
+        selectionCtx = null;
+    }
+}
+
+function drawSelectionBox() {
+    if (!selectionCtx) return;
+    selectionCtx.clearRect(0, 0, selectionCanvas.width, selectionCanvas.height);
+    selectionCtx.strokeStyle = 'blue';
+    selectionCtx.strokeRect(startX, startY, endX - startX, endY - startY);
+}
+
+function replaceSelectedChars() {
+    //将mapCanvas中范围在(startX, startY)和(endX, endY)之间的字符替换为selectedChar
+    const startMapX = Math.floor(startX / 16) + viewX;
+    const startMapY = Math.floor(startY / 24) + viewY;
+    const endMapX = Math.floor(endX / 16) + viewX;
+    const endMapY = Math.floor(endY / 24) + viewY;
+    for (let y = startMapY; y <= endMapY; y++) {
+        for (let x = startMapX; x <= endMapX; x++) {
+            if (x < mapWidth && y < mapHeight && mapData[y] && mapData[y][x]) {
+                mapData[y][x] = selectedChar;
+            }
+        }
+    }
+    renderMap();
+}
 
 canvas.addEventListener('mousemove', function (event) {
     const rect = canvas.getBoundingClientRect();
