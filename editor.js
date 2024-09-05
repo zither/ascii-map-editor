@@ -107,6 +107,8 @@ let selectedChar = 'X';
 let selectedColor = '#000000';
 let gridWidth = 50;
 let gridHeight = 20;
+let xOffset = 10;
+let yOffset = 10;
 
 let mapWidth = 0;
 let mapHeight = 0;
@@ -176,13 +178,13 @@ function getColorForChar(char) {
 
 document.addEventListener('keydown', function (event) {
     if (event.key === 'ArrowRight') {
-        viewX = Math.min(viewX + (gridWidth / 2), mapWidth - gridWidth);
+        viewX = Math.min(viewX + xOffset, mapWidth - gridWidth);
     } else if (event.key === 'ArrowLeft') {
-        viewX = Math.max(viewX - (gridWidth / 2), 0);
+        viewX = Math.max(viewX - xOffset, 0);
     } else if (event.key === 'ArrowDown') {
-        viewY = Math.min(viewY + (gridHeight / 2), mapHeight - gridHeight);
+        viewY = Math.min(viewY + yOffset, mapHeight - gridHeight);
     } else if (event.key === 'ArrowUp') {
-        viewY = Math.max(viewY - (gridHeight / 2), 0);
+        viewY = Math.max(viewY - yOffset, 0);
     }
     renderMap();
 });

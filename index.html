@@ -6,224 +6,113 @@
     <title>ASCII 地图编辑器</title>
     <style>
         canvas {
-            border: 1px solid black;
+            border: 1px solid #ccc;
         }
         .char-button {
             margin: 2px;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        #char-buttons {
+          margin: 10px 0;
+        }
+        #move-buttons {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        #moveUp, #moveDown {
+            margin: 10px 0;
+        }
+        #moveLeft, #moveRight {
+            margin: 0 10px;
+        }
+        .horizontal-buttons {
+            display: flex;
+            justify-content: center;
+        }
+        /* styles.css */
+        .container {
+          display: flex;
+          flex-direction: row;
+          width: 100%;
+          height: 100vh;
+        }
+        
+        .toolbar {
+          width: 200px; /* initial width of the toolbar */
+          background-color: #f0f0f0;
+          padding: 10px;
+          border-right: 1px solid #ccc;
+        }
+        
+        .map-container {
+          flex-grow: 1;
+          overflow: auto;
+        }
+        
+        .resize-handle {
+          width: 5px;
+          background-color: #ccc;
+          cursor: ew-resize;
+        }
+        
+        /* add some styles to make the resize handle visible */
+        .resize-handle:hover {
+          background-color: #aaa;
+        }
+        .map-container {
+          position: relative;
+        }
+        
+        #mapCanvas {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+        }
+        h1 {
+          font-size: x-large;
+        }
+        body {
+          margin: 0;
+          padding: 0;
         }
     </style>
 </head>
 <body>
-    <h1>ASCII 地图编辑器</h1>
-    <form id="loadForm">
-        <input type="file" id="mapFile" accept=".txt">
-        <label for="startX">左上X坐标:</label>
-        <input type="number" id="startX" value="0" style="width: 60px;">
-        <label for="startY">左上Y坐标:</label>
-        <input type="number" id="startY" value="0" style="width: 60px;">
-        <button type="submit">加载地图</button>
-    </form>
-    <div id="char-buttons">
-        <button class="char-button" data-char="#" data-color="#777777" title="建筑">#</button>
-        <button class="char-button" data-char="%" data-color="#FFFFFF" title="特殊地点">%</button>
-        <button class="char-button" data-char="," data-color="#777777" title="乡间小路">,</button>
-        <button class="char-button" data-char="." data-color="#00AA00" title="平地">.</button>
-        <button class="char-button" data-char="?" data-color="#FFFF00" title="区域地点">?</button>
-        <button class="char-button" data-char="C" data-color="#777777" title="玩家建筑">C</button>
-        <button class="char-button" data-char="H" data-color="#770077" title="高原">H</button>
-        <button class="char-button" data-char="R" data-color="#0000AA" title="大江">R</button>
-        <button class="char-button" data-char="V" data-color="#AA0000" title="火山">V</button>
-        <button class="char-button" data-char="b" data-color="#AAAA00" title="沙滩">b</button>
-        <button class="char-button" data-char="d" data-color="#AAAA00" title="沙漠">d</button>
-        <button class="char-button" data-char="h" data-color="#770077" title="丘陵">h</button>
-        <button class="char-button" data-char="j" data-color="#00AA00" title="丛林">j</button>
-        <button class="char-button" data-char="r" data-color="#0000FF" title="河流">r</button>
-        <button class="char-button" data-char="t" data-color="#00FF00" title="苔原">t</button>
-        <button class="char-button" data-char="w" data-color="#00FFFF" title="瀑布">w</button>
-        <button class="char-button" data-char="y" data-color="#AAAA00" title="草原">y</button>
-        <button class="char-button" data-char="~" data-color="#0000AA" title="海洋">~</button>
-        <button class="char-button" data-char="+" data-color="#777777" title="路口">+</button>
-        <button class="char-button" data-char="-" data-color="#777777" title="路">-</button>
-        <button class="char-button" data-char="|" data-color="#777777" title="路">|</button>
-        <button class="char-button" data-char="\" data-color="#777777" title="路">\</button>
-        <button class="char-button" data-char="/" data-color="#777777" title="路">/</button>
-        <button class="char-button" data-char="=" data-color="#777777" title="桥">=</button>
-        <button class="char-button" data-char="$" data-color="#FF0000" title="岩浆">$</button>
-        <button class="char-button" data-char="F" data-color="#00AA00" title="原始森林">F</button>
-        <button class="char-button" data-char="L" data-color="#FF0000" title="岩浆湖">L</button>
-        <button class="char-button" data-char="S" data-color="#00FFFF" title="浅滩">S</button>
-        <button class="char-button" data-char="^" data-color="#FF00FF" title="高山">^</button>
-        <button class="char-button" data-char="c" data-color="#777777" title="城镇">c</button>
-        <button class="char-button" data-char="f" data-color="#00FF00" title="树林">f</button>
-        <button class="char-button" data-char="i" data-color="#FFFFFF" title="冰">i</button>
-        <button class="char-button" data-char="l" data-color="#0000FF" title="湖泊">l</button>
-        <button class="char-button" data-char="s" data-color="#EE0000" title="沼泽">s</button>
-        <button class="char-button" data-char="v" data-color="#00FF00" title="山谷">v</button>
-        <button class="char-button" data-char="x" data-color="#777777" title="荒原">x</button>
-        <button class="char-button" data-char="z" data-color="#FFFF00" title="海岸">z</button>
-        <button class="char-button" data-char="@" data-color="#FFFFFF" title="自己">@</button>
-        <button class="char-button" data-char="m" data-color="#EE0000" title="怪物">m</button>
+    <div class="container">
+        <div class="toolbar">
+            <h1>ASCII 地图编辑器</h1>
+            <form id="loadForm">
+                <input type="file" id="mapFile" accept=".txt">
+                <br>
+                <label for="startX">初始X坐标:</label>
+                <input type="number" id="startX" value="0" style="width: 60px;">
+                <br>
+                <label for="startY">初始Y坐标:</label>
+                <input type="number" id="startY" value="0" style="width: 60px;">
+                <br>
+                <button type="submit">加载地图</button>
+            </form>
+            <div id="char-buttons"> </div>
+            <div id="move-buttons">
+              <button id="moveUp">Up</button>
+              <div class="horizontal-buttons">
+                  <button id="moveLeft">Left</button>
+                  <button id="moveRight">Right</button>
+              </div>
+              <button id="moveDown">Down</button>
+          </div>
+            <button id="exportButton">导出地图</button>
+            <div>当前顶点坐标: <span id="coords">0, 0</span></div>
+        </div>
+        <div class="resize-handle"></div>
+        <div class="map-container">
+            <canvas id="mapCanvas"></canvas>
+        </div>
     </div>
-    <canvas id="mapCanvas" width="800" height="480"></canvas>
-    <div>当前顶点坐标: <span id="coords">0, 0</span>
-        <button id="moveUp">Up</button>
-        <button id="moveDown">Down</button>
-        <button id="moveLeft">Left</button>
-        <button id="moveRight">Right</button>
-    </div>
-
-    <button id="exportButton">导出地图</button>
-
-    <script>
-        const canvas = document.getElementById('mapCanvas');
-        const ctx = canvas.getContext('2d');
-        let mapData = [];
-        let viewX = 0;
-        let viewY = 0;
-        let selectedChar = 'X';
-        let selectedColor = '#000000';
-            let gridWidth = 50;
-            let gridHeight = 20;
-
-            let mapWidth = 0;
-            let mapHeight = 0;
-
-            document.getElementById('loadForm').addEventListener('submit', function (event) {
-                event.preventDefault();
-                const fileInput = document.getElementById('mapFile');
-                const file = fileInput.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function (e) {
-                        const content = e.target.result;
-                        mapData = content.split('\n').map(line => line.split(''));
-                        mapHeight = mapData.length;
-                        mapWidth = mapData[0].length;
-                        const startX = parseInt(document.getElementById('startX').value, 10);
-                        const startY = parseInt(document.getElementById('startY').value, 10);
-                        viewX = startX;
-                        viewY = startY;
-                        renderMap();
-                    };
-                    reader.readAsText(file);
-                }
-            });
-
-    function renderMap() {
-        canvas.width = gridWidth * 16; // 每个字符的宽度为16像素
-        canvas.height = gridHeight * 24; // 每个字符的高度为24像素
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = '#000000'; // 设置背景颜色为黑色
-        ctx.fillRect(0, 0, canvas.width, canvas.height); // 填充背景颜色
-        ctx.font = '12px monospace';
-        for (let y = 0; y < gridHeight; y++) {
-            for (let x = 0; x < gridWidth; x++) {
-                const mapX = viewX + x;
-                const mapY = viewY + y;
-                if (mapX < mapWidth && mapY < mapHeight && mapData[mapY] && mapData[mapY][mapX]) {
-                    ctx.fillStyle = getColorForChar(mapData[mapY][mapX]);
-                    let char = mapData[mapY][mapX];
-                    ctx.fillText(char, x * 16, y * 24 + 12);
-                }
-            }
-        }
-        document.getElementById('coords').textContent = `${viewX}, ${viewY}`;
-    }
-
-
-        function getColorForChar(char) {
-            //const button = document.querySelector(`.char-button[data-char="${char}"]`);
-            if (char === "\\") {
-                button = document.querySelector(`.char-button[data-char="\\\\"]`);
-            } else  {
-                button = document.querySelector(`.char-button[data-char="${char}"]`);
-            }
-            return button ? button.getAttribute('data-color') : '#000000';
-        }
-
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'ArrowRight') {
-                viewX = Math.min(viewX + (gridWidth / 2), mapWidth - gridWidth);
-            } else if (event.key === 'ArrowLeft') {
-                viewX = Math.max(viewX - (gridWidth / 2), 0);
-            } else if (event.key === 'ArrowDown') {
-                viewY = Math.min(viewY + (gridHeight / 2), mapHeight - gridHeight);
-            } else if (event.key === 'ArrowUp') {
-                viewY = Math.max(viewY - (gridHeight / 2), 0);
-            }
-            renderMap();
-        });
-
-            canvas.addEventListener('mousemove', function (event) {
-                const rect = canvas.getBoundingClientRect();
-                const x = Math.floor((event.clientX - rect.left) / 16);
-                const y = Math.floor((event.clientY - rect.top) / 24);
-                const mapX = viewX + x;
-                const mapY = viewY + y;
-                document.getElementById('coords').textContent = `${viewX}, ${viewY} | 鼠标: ${mapX}, ${mapY}`;
-
-                if (event.ctrlKey) {
-                    if (mapX < mapWidth && mapY < mapHeight && mapData[mapY] && mapData[mapY][mapX]) {
-                        mapData[mapY][mapX] = selectedChar;
-                        renderMap();
-                    }
-                }
-            });
-
-
-            document.getElementById('moveUp').addEventListener('click', function () {
-                viewY = Math.max(viewY - 1, 0);
-                renderMap();
-            });
-
-            document.getElementById('moveDown').addEventListener('click', function () {
-                viewY = Math.min(viewY + 1, mapHeight - 1);
-                renderMap();
-            });
-
-            document.getElementById('moveLeft').addEventListener('click', function () {
-                viewX = Math.max(viewX - 1, 0);
-                renderMap();
-            });
-
-            document.getElementById('moveRight').addEventListener('click', function () {
-                viewX = Math.min(viewX + 1, mapWidth - 1);
-                renderMap();
-            });
-
-            canvas.addEventListener('mousedown', function (event) {
-                const rect = canvas.getBoundingClientRect();
-                const x = Math.floor((event.clientX - rect.left) / 16);
-                const y = Math.floor((event.clientY - rect.top) / 24);
-                const mapX = viewX + x;
-                const mapY = viewY + y;
-                if (mapX < mapWidth && mapY < mapHeight && mapData[mapY] && mapData[mapY][mapX]) {
-                    if (event.button === 1) { // 左键点击
-                        mapData[mapY][mapX] = selectedChar;
-                        renderMap();
-                    }
-                }
-            });
-
-        document.querySelectorAll('.char-button').forEach(button => {
-            button.addEventListener('click', function() {
-                selectedChar = button.getAttribute('data-char');
-                selectedColor = button.getAttribute('data-color');
-            });
-        });
-
-        document.getElementById('exportButton').addEventListener('click', function() {
-            const exportedData = mapData.map(line => line.join('')).join('\n');
-            const blob = new Blob([exportedData], { type: 'text/plain' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'exported_map.txt';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        });
-    </script>
+    <script src="./editor.js"></script>
 </body>
+
 </html>
