@@ -109,6 +109,7 @@ let gridWidth = 50;
 let gridHeight = 20;
 let xOffset = 10;
 let yOffset = 10;
+let backgroundColor = '#000000';
 
 let mapWidth = 0;
 let mapHeight = 0;
@@ -148,7 +149,7 @@ function renderMap() {
     canvas.width = gridWidth * 16; // 每个字符的宽度为16像素
     canvas.height = gridHeight * 24; // 每个字符的高度为24像素
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = '#000000'; // 设置背景颜色为黑色
+    ctx.fillStyle = backgroundColor; // 设置背景颜色为黑色
     ctx.fillRect(0, 0, canvas.width, canvas.height); // 填充背景颜色
     ctx.font = '12px monospace';
     for (let y = 0; y < gridHeight; y++) {
@@ -259,4 +260,15 @@ document.getElementById('exportButton').addEventListener('click', function () {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+});
+
+document.getElementById('changeBgColor').addEventListener('click', function() {
+    // 弹出一个调色盘
+    const newColor = prompt('选择背景颜色', backgroundColor);
+    if (newColor) {
+        // 更新背景颜色变量
+        backgroundColor = newColor;
+        // 重新渲染地图
+        renderMap();
+    }
 });
