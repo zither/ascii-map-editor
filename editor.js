@@ -41,6 +41,27 @@ const defaultChars = [
 ];
 let chars = defaultChars;
 
+const defaultMap = 
+`~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~SSSSS~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~SSzzzzzzzSSSSS~~~~~~~~~~~~~~~
+~~~~~~~~~~SSzHHfff...zzzzzS~~~~~~~~~~~~~~
+~~~~~~~~~~SzHH^Hfff.......zS~~~~~~~~~~~~~
+~~~~~~~~~SzzH^^^HHfff......zS~~~~~~~~~~~~
+~~~~~~~~SSzH^^!^^HHffc-----+-c~~~~~~~~~~~
+~~~~~~~~~~SzH^^HHHfff......|.zS~~~~~~~~~~
+~~~~~~~~~~Sz.HHHHflfffrrrrr=rrzS~~~~~~~~~
+~~~~~~~~~~SSz..HHlllrrrff../zSS~~~~~~~~~~
+~~~~~~~~~~SSzzz.Hflfffff../.zSS~~~~~~~~~~
+~~~~~~~~~~~SSz..ffffffc--+zSS~~~~~~~~~~~~
+~~~~~~~~~~~~~SSz.fff...,...zzSS~~~~~~~~~~
+~~~~~~~~~~~~~~Szz.f.....,...zzSS~~~~~~~~~
+~~~~~~~~~~~~~~~SSzzz.....,zzSS~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~SSzz....z?S~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~SSz.zSS~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~SSzS~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~S~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`;
 
 const toolbar = document.querySelector('.toolbar');
 const resizeHandle = document.querySelector('.resize-handle');
@@ -128,13 +149,22 @@ document.getElementById('loadForm').addEventListener('submit', function (event) 
             mapData = content.split('\n').map(line => line.split(''));
             mapHeight = mapData.length;
             mapWidth = mapData[0].length;
-            const startX = parseInt(document.getElementById('startX').value, 10);
-            const startY = parseInt(document.getElementById('startY').value, 10);
+            startX = parseInt(document.getElementById('startX').value, 10);
+            startY = parseInt(document.getElementById('startY').value, 10);
             viewX = startX;
             viewY = startY;
             renderMap();
         };
         reader.readAsText(file);
+    } else {
+        mapData = defaultMap.split('\n').map(line => line.split(''));
+        mapHeight = mapData.length;
+        mapWidth = mapData[0].length;
+        startX = parseInt(document.getElementById('startX').value, 10);
+        startY = parseInt(document.getElementById('startY').value, 10);
+        viewX = startX;
+        viewY = startY;
+        renderMap();
     }
 });
 
