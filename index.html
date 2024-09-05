@@ -78,6 +78,9 @@
           margin: 0;
           padding: 0;
         }
+        #clearDataFile {
+          display: inline-block;
+        }
     </style>
 </head>
 <body>
@@ -85,7 +88,11 @@
         <div class="toolbar">
             <h1>ASCII 地图编辑器</h1>
             <form id="loadForm">
+                <label for="mapFile">地图文件:</label>
                 <input type="file" id="mapFile" accept=".txt">
+                <br>
+                <label for="dataFile">字符文件:</label>
+                <input type="file" id="dataFile" accept=".json">
                 <br>
                 <label for="startX">初始X坐标:</label>
                 <input type="number" id="startX" value="0" style="width: 60px;">
@@ -93,6 +100,7 @@
                 <label for="startY">初始Y坐标:</label>
                 <input type="number" id="startY" value="0" style="width: 60px;">
                 <br>
+                <button type="button" id="clearLoadForm">重置</button>
                 <button type="submit">加载地图</button>
             </form>
             <div id="char-buttons"> </div>
@@ -107,6 +115,7 @@
             <button id="changeBgColor">背景颜色</button>
             <button id="exportButton">导出地图</button>
             <div>当前顶点坐标: <span id="coords">0, 0</span></div>
+            <div>当前鼠标坐标: <span id="mouse-coords">0, 0</span></div>
         </div>
         <div class="resize-handle"></div>
         <div class="map-container">
@@ -115,5 +124,4 @@
     </div>
     <script src="./editor.js"></script>
 </body>
-
 </html>

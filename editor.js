@@ -1,4 +1,4 @@
-const chars = [
+const defaultChars = [
     { char: "#", color: "#777777", title: "建筑" },
     { char: "%", color: "#FFFFFF", title: "特殊地点" },
     { char: ",", color: "#777777", title: "乡间小路" },
@@ -39,6 +39,7 @@ const chars = [
     { char: "@", color: "#FFFFFF", title: "自己" },
     { char: "m", color: "#EE0000", title: "怪物" }
 ];
+let chars = defaultChars;
 
 
 const toolbar = document.querySelector('.toolbar');
@@ -77,27 +78,6 @@ document.addEventListener('mouseup', () => {
   isResizing = false;
 });
 
-
-
-
-const charButtonsDiv = document.querySelector('#char-buttons');
-
-chars.forEach((char) => {
-  const button = document.createElement("button");
-  button.classList.add("char-button");
-  button.setAttribute("data-char", char.char);
-  button.setAttribute("data-color", char.color);
-  button.setAttribute("title", char.title);
-  button.textContent = char.char;
-  charButtonsDiv.appendChild(button);
-});
-
-charButtonsDiv.addEventListener('click', function (event) {
-    if (event.target.classList.contains('char-button')) {
-      selectedChar = event.target.getAttribute('data-char');
-    }
-  });
-
 const canvas = document.getElementById('mapCanvas');
 const ctx = canvas.getContext('2d');
 let mapData = [];
@@ -122,10 +102,23 @@ window.onload = function() {
         gridWidth = Math.floor(containerWidth / 16); // 每个字符的宽度为16像素
         gridHeight = Math.floor(containerHeight / 24); // 每个字符的高度为24像素
     }
+    setCharButtons();
 };
 
 document.getElementById('loadForm').addEventListener('submit', function (event) {
     event.preventDefault();
+    const dataInput = document.getElementById('dataFile');
+    const data = dataInput.files[0];
+    if (data) {
+        const dataReader = new FileReader();
+        dataReader.onload = function (event) { 
+            const newChars = JSON.parse(event.target.result);
+            chars = newChars;
+            setCharButtons();
+        }
+        dataReader.readAsText(data);
+    }
+
     const fileInput = document.getElementById('mapFile');
     const file = fileInput.files[0];
     if (file) {
@@ -166,6 +159,25 @@ function renderMap() {
     document.getElementById('coords').textContent = `${viewX}, ${viewY}`;
 }
 
+const charButtonsDiv = document.querySelector('#char-buttons');
+charButtonsDiv.addEventListener('click', function (event) {
+    if (event.target.classList.contains('char-button')) {
+        selectedChar = event.target.getAttribute('data-char');
+    }
+});
+
+function setCharButtons() {
+    charButtonsDiv.innerHTML = '';
+    chars.forEach((char) => {
+        const button = document.createElement("button");
+        button.classList.add("char-button");
+        button.setAttribute("data-char", char.char);
+        button.setAttribute("data-color", char.color);
+        button.setAttribute("title", char.title);
+        button.textContent = char.char;
+        charButtonsDiv.appendChild(button);
+    });
+}
 
 function getColorForChar(char) {
     //const button = document.querySelector(`.char-button[data-char="${char}"]`);
@@ -196,7 +208,7 @@ canvas.addEventListener('mousemove', function (event) {
     const y = Math.floor((event.clientY - rect.top) / 24);
     const mapX = viewX + x;
     const mapY = viewY + y;
-    document.getElementById('coords').textContent = `${viewX}, ${viewY} | 鼠标: ${mapX}, ${mapY}`;
+    document.getElementById('mouse-coords').textContent = `${mapX}, ${mapY}`;
 
     if (event.ctrlKey) {
         if (mapX < mapWidth && mapY < mapHeight && mapData[mapY] && mapData[mapY][mapX]) {
@@ -271,4 +283,13 @@ document.getElementById('changeBgColor').addEventListener('click', function() {
         // 重新渲染地图
         renderMap();
     }
+});
+
+document.getElementById('clearLoadForm').addEventListener('click', function() {
+    var dataFileInput = document.getElementById('dataFile');
+    dataFileInput.value = ''; // 清除文件输入框的值
+    var mapFileInput = document.getElementById('mapFile');
+    mapFileInput.value = ''; // 清除文件输入框的值
+    chars = defaultChars;
+    setCharButtons();
 });
