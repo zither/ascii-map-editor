@@ -304,11 +304,12 @@ function drawSelectionBox() {
 }
 
 function replaceSelectedChars() {
-    //将mapCanvas中范围在(startX, startY)和(endX, endY)之间的字符替换为selectedChar
-    const startMapX = Math.floor(startX / 16) + viewX;
-    const startMapY = Math.floor(startY / 24) + viewY;
-    const endMapX = Math.floor(endX / 16) + viewX;
-    const endMapY = Math.floor(endY / 24) + viewY;
+    // 确保 startX 和 startY 总是小于 endX 和 endY
+    const startMapX = Math.min(Math.floor(startX / 16) + viewX, Math.floor(endX / 16) + viewX);
+    const startMapY = Math.min(Math.floor(startY / 24) + viewY, Math.floor(endY / 24) + viewY);
+    const endMapX = Math.max(Math.floor(startX / 16) + viewX, Math.floor(endX / 16) + viewX);
+    const endMapY = Math.max(Math.floor(startY / 24) + viewY, Math.floor(endY / 24) + viewY);
+
     for (let y = startMapY; y <= endMapY; y++) {
         for (let x = startMapX; x <= endMapX; x++) {
             if (x < mapWidth && y < mapHeight && mapData[y] && mapData[y][x]) {
@@ -318,6 +319,7 @@ function replaceSelectedChars() {
     }
     renderMap();
 }
+
 
 canvas.addEventListener('mousemove', function (event) {
     const rect = canvas.getBoundingClientRect();
