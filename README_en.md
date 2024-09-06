@@ -14,8 +14,8 @@ A simple tool for creating and editing ASCII maps.
 
 - Before editing the map, click the buttons in the character button group to select the character you want to edit.
 - Single character modification: Left-click on the map area to modify the corresponding character.
-- Batch modification: Hold down the Ctrl key and move the mouse over the map area to automatically modify characters.
-- Selection modification: Hold down the Shift key, left-click on the map area and drag to select an area, then replace the characters within the selected area in bulk.
+- Automatic modification: Hold down the Ctrl key and move the mouse over the map area to automatically modify characters.
+- Batch modification: Hold down the Shift key, left-click on the map area and drag to select an area, then replace the characters within the selected area in bulk.
 
 ## Moving the Map
 
