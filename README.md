@@ -1,5 +1,7 @@
 # ASCII 地图编辑器(ASCII Map Editor)
 
+中文|[English](./README_en.md)
+
 ![Ascii Map Editor](./images/screenshot.png)
 
 一个简单的创建和编辑 ASCII 地图的工具。
