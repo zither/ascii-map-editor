@@ -118,6 +118,7 @@ let mapHeight = 0;
 
 // 选区坐标
 let startX, startY, endX, endY;
+let isDrawing = false;
 
 let isDragging = false; // 是否正在拖动
 let dragStartX = 0; // 拖动开始时的X坐标
