@@ -261,9 +261,11 @@ function createSelectionCanvas() {
     // 获取 mapCanvas 的父元素
     const parentElement = mapCanvas.parentElement;
 
+    const mapCanvasRect = mapCanvas.getBoundingClientRect();
+
     // 设置 selectionCanvas 的尺寸与 mapCanvas 一致
-    selectionCanvas.width = mapCanvas.width;
-    selectionCanvas.height = mapCanvas.height;
+    selectionCanvas.width = mapCanvasRect.width;
+    selectionCanvas.height = mapCanvasRect.height;
 
     // 设置 selectionCanvas 的样式
     selectionCanvas.style.position = 'absolute';
