@@ -116,7 +116,15 @@ let backgroundColor = '#000000';
 let mapWidth = 0;
 let mapHeight = 0;
 
+// 选区坐标
 let startX, startY, endX, endY;
+
+let isDragging = false; // 是否正在拖动
+let dragStartX = 0; // 拖动开始时的X坐标
+let dragStartY = 0; // 拖动开始时的Y坐标
+let initialViewX = 0; // 拖动开始时的viewX
+let initialViewY = 0; // 拖动开始时的viewY
+
 
 window.onload = function() {
     const mapContainer = document.getElementsByClassName('map-container')[0];
@@ -321,34 +329,61 @@ function replaceSelectedChars() {
 }
 
 canvas.addEventListener('mousemove', function (event) {
-    const rect = canvas.getBoundingClientRect();
-    const x = Math.floor((event.clientX - rect.left) / 16);
-    const y = Math.floor((event.clientY - rect.top) / 24);
-    const mapX = viewX + x;
-    const mapY = viewY + y;
-    document.getElementById('mouse-coords').textContent = `${mapX}, ${mapY}`;
 
-    if (event.ctrlKey) {
-        if (mapX < mapWidth && mapY < mapHeight && mapData[mapY] && mapData[mapY][mapX]) {
-            mapData[mapY][mapX] = selectedChar;
-            renderMap();
+    if (isDragging) {
+        const deltaX = event.clientX - dragStartX;
+        const deltaY = event.clientY - dragStartY;
+        viewX = initialViewX - Math.floor(deltaX / 16); // 16是每个字符的宽度
+        viewY = initialViewY - Math.floor(deltaY / 24); // 24是每个字符的高度
+        renderMap();
+    } else {
+
+        const rect = canvas.getBoundingClientRect();
+        const x = Math.floor((event.clientX - rect.left) / 16);
+        const y = Math.floor((event.clientY - rect.top) / 24);
+        const mapX = viewX + x;
+        const mapY = viewY + y;
+        document.getElementById('mouse-coords').textContent = `${mapX}, ${mapY}`;
+
+        if (event.ctrlKey) {
+            if (mapX < mapWidth && mapY < mapHeight && mapData[mapY] && mapData[mapY][mapX]) {
+                mapData[mapY][mapX] = selectedChar;
+                renderMap();
+            }
         }
     }
 });
 
 canvas.addEventListener('mousedown', function (event) {
+    if (event.altKey) {
+        isDragging = true;
+        dragStartX = event.clientX;
+        dragStartY = event.clientY;
+        initialViewX = viewX;
+        initialViewY = viewY;
+        return;
+    }
+
     const rect = canvas.getBoundingClientRect();
     const x = Math.floor((event.clientX - rect.left) / 16);
     const y = Math.floor((event.clientY - rect.top) / 24);
     const mapX = viewX + x;
     const mapY = viewY + y;
-    console.log(event.button);
-    if (mapX < mapWidth && mapY < mapHeight && mapData[mapY] && mapData[mapY][mapX]) {
-        if (event.button === 0) { // 左键点击
-            mapData[mapY][mapX] = selectedChar;
-            renderMap();
-        }
+
+    if (mapX >= mapWidth || mapY >= mapHeight || !mapData[mapY] || !mapData[mapY][mapX]) {
+        console.error('Invalid map coordinates:', mapX, mapY);
+        return;
     }
+
+    if (event.button === 0) { // 左键点击
+        mapData[mapY][mapX] = selectedChar;
+        renderMap();
+    }
+});
+
+
+canvas.addEventListener('mouseup', () => {
+    isDragging = false;
 });
 
 canvas.addEventListener('wheel', function(event) {
