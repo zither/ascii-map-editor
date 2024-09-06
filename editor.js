@@ -336,6 +336,21 @@ canvas.addEventListener('mousemove', function (event) {
     }
 });
 
+canvas.addEventListener('mousedown', function (event) {
+    const rect = canvas.getBoundingClientRect();
+    const x = Math.floor((event.clientX - rect.left) / 16);
+    const y = Math.floor((event.clientY - rect.top) / 24);
+    const mapX = viewX + x;
+    const mapY = viewY + y;
+    console.log(event.button);
+    if (mapX < mapWidth && mapY < mapHeight && mapData[mapY] && mapData[mapY][mapX]) {
+        if (event.button === 0) { // 左键点击
+            mapData[mapY][mapX] = selectedChar;
+            renderMap();
+        }
+    }
+});
+
 canvas.addEventListener('wheel', function(event) {
     event.preventDefault(); // 阻止默认的滚动行为
 
@@ -351,7 +366,6 @@ canvas.addEventListener('wheel', function(event) {
     // 重新渲染地图
     renderMap();
 });
-
 
 
 document.getElementById('moveUp').addEventListener('click', function () {
@@ -374,20 +388,6 @@ document.getElementById('moveRight').addEventListener('click', function () {
     renderMap();
 });
 
-canvas.addEventListener('mousedown', function (event) {
-    const rect = canvas.getBoundingClientRect();
-    const x = Math.floor((event.clientX - rect.left) / 16);
-    const y = Math.floor((event.clientY - rect.top) / 24);
-    const mapX = viewX + x;
-    const mapY = viewY + y;
-    console.log(event.button);
-    if (mapX < mapWidth && mapY < mapHeight && mapData[mapY] && mapData[mapY][mapX]) {
-        if (event.button === 0) { // 左键点击
-            mapData[mapY][mapX] = selectedChar;
-            renderMap();
-        }
-    }
-});
 
 document.querySelectorAll('.char-button').forEach(button => {
     button.addEventListener('click', function () {
