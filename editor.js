@@ -320,7 +320,6 @@ function replaceSelectedChars() {
     renderMap();
 }
 
-
 canvas.addEventListener('mousemove', function (event) {
     const rect = canvas.getBoundingClientRect();
     const x = Math.floor((event.clientX - rect.left) / 16);
@@ -336,6 +335,23 @@ canvas.addEventListener('mousemove', function (event) {
         }
     }
 });
+
+canvas.addEventListener('wheel', function(event) {
+    event.preventDefault(); // 阻止默认的滚动行为
+
+    // 根据滚轮滚动的方向调整 viewY 的值
+    if (event.deltaY > 0) {
+        // 向下滚动
+        viewY = Math.min(viewY + yOffset, mapHeight - gridHeight);
+    } else {
+        // 向上滚动
+        viewY = Math.max(viewY - yOffset, 0);
+    }
+
+    // 重新渲染地图
+    renderMap();
+});
+
 
 
 document.getElementById('moveUp').addEventListener('click', function () {
