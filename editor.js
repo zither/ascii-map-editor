@@ -72,9 +72,10 @@ let initialWidth = toolbar.offsetWidth;
 let initialX = 0; // 记录鼠标按下时的初始X坐标
 
 resizeHandle.addEventListener('mousedown', (e) => {
-  isResizing = true;
-  initialWidth = toolbar.offsetWidth;
-  initialX = e.clientX; // 记录鼠标按下时的初始X坐标
+    e.preventDefault();
+    isResizing = true;
+    initialWidth = toolbar.offsetWidth;
+    initialX = e.clientX; // 记录鼠标按下时的初始X坐标
 });
 
 document.addEventListener('mousemove', (e) => {
