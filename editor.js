@@ -1,67 +1,77 @@
 const defaultChars = [
-    { char: "#", color: "#777777", title: "建筑" },
-    { char: "%", color: "#FFFFFF", title: "特殊地点" },
-    { char: ",", color: "#777777", title: "乡间小路" },
-    { char: ".", color: "#00AA00", title: "平地" },
-    { char: "?", color: "#FFFF00", title: "区域地点" },
-    { char: "C", color: "#777777", title: "玩家建筑" },
-    { char: "H", color: "#770077", title: "高原" },
-    { char: "R", color: "#0000AA", title: "大江" },
-    { char: "V", color: "#AA0000", title: "火山" },
-    { char: "b", color: "#AAAA00", title: "沙滩" },
-    { char: "d", color: "#AAAA00", title: "沙漠" },
-    { char: "h", color: "#770077", title: "丘陵" },
-    { char: "j", color: "#00AA00", title: "丛林" },
-    { char: "r", color: "#0000FF", title: "河流" },
-    { char: "t", color: "#00FF00", title: "苔原" },
-    { char: "w", color: "#00FFFF", title: "瀑布" },
-    { char: "y", color: "#AAAA00", title: "草原" },
-    { char: "~", color: "#0000AA", title: "海洋" },
-    { char: "+", color: "#777777", title: "路口" },
-    { char: "-", color: "#777777", title: "路" },
-    { char: "|", color: "#777777", title: "路" },
-    { char: "\\", color: "#777777", title: "路" },
-    { char: "/", color: "#777777", title: "路" },
-    { char: "=", color: "#777777", title: "桥" },
-    { char: "$", color: "#FF0000", title: "岩浆" },
-    { char: "F", color: "#00AA00", title: "原始森林" },
-    { char: "L", color: "#FF0000", title: "岩浆湖" },
-    { char: "S", color: "#00FFFF", title: "浅滩" },
-    { char: "^", color: "#FF00FF", title: "高山" },
-    { char: "c", color: "#777777", title: "城镇" },
-    { char: "f", color: "#00FF00", title: "树林" },
-    { char: "i", color: "#FFFFFF", title: "冰" },
-    { char: "l", color: "#0000FF", title: "湖泊" },
-    { char: "s", color: "#EE0000", title: "沼泽" },
-    { char: "v", color: "#00FF00", title: "山谷" },
-    { char: "x", color: "#777777", title: "荒原" },
-    { char: "z", color: "#FFFF00", title: "海岸" },
-    { char: "@", color: "#FFFFFF", title: "自己" },
-    { char: "m", color: "#EE0000", title: "怪物" }
+    { "char": "!", "color": "#CCFFFF", "title": "山巅" },
+    { "char": "%", "color": "#FFFFFF", "title": "特殊地点" },
+    { "char": ",", "color": "#8C5738", "title": "乡间小路" }, 
+    { "char": ".", "color": "#559200", "title": "平地" },
+    { "char": "?", "color": "#FFFF00", "title": "区域地点" },
+    { "char": "C", "color": "#999900", "title": "玩家建筑" }, 
+    { "char": "H", "color": "#573600", "title": "高原" },
+    { "char": "R", "color": "#3366FF", "title": "大江" },
+    { "char": "V", "color": "#AA0000", "title": "火山" },
+    { "char": "b", "color": "#CFC4A5", "title": "沙滩" },
+    { "char": "d", "color": "#EEBB22", "title": "沙漠" },
+    { "char": "h", "color": "#724C00", "title": "丘陵" },
+    { "char": "j", "color": "#00AA00", "title": "丛林" },
+    { "char": "r", "color": "#6699FF", "title": "河流" },
+    { "char": "t", "color": "#00FF00", "title": "苔原" },
+    { "char": "w", "color": "#00FFFF", "title": "瀑布" },
+    { "char": "y", "color": "#A7CC14", "title": "草原" },
+    { "char": "~", "color": "#0000AA", "title": "海洋" },
+    { "char": "#", "color": "#4F3645", "title": "建筑" },
+    { "char": "+", "color": "#464646", "title": "路口" },
+    { "char": "-", "color": "#464646", "title": "路" },
+    { "char": "|", "color": "#464646", "title": "路" },
+    { "char": "\\", "color": "#464646", "title": "路" },
+    { "char": "/", "color": "#464646", "title": "路" },
+    { "char": "=", "color": "#484339", "title": "桥" },
+    { "char": "$", "color": "#FF0000", "title": "岩浆" },
+    { "char": "F", "color": "#008800", "title": "原始森林" },
+    { "char": "L", "color": "#FF5000", "title": "岩浆湖" },
+    { "char": "S", "color": "#44CCCC", "title": "浅滩" },
+    { "char": "^", "color": "#5F6E7C", "title": "高山" },
+    { "char": "c", "color": "#5F5655", "title": "城镇" },
+    { "char": "f", "color": "#00B600", "title": "树林" },
+    { "char": "i", "color": "#FFFFFF", "title": "冰" },
+    { "char": "l", "color": "#6464FF", "title": "湖泊" },
+    { "char": "s", "color": "#9DA80A", "title": "沼泽" },
+    { "char": "v", "color": "#22DD22", "title": "山谷" },
+    { "char": "x", "color": "#8A8360", "title": "荒原" },
+    { "char": "z", "color": "#B1A485", "title": "海岸" },
+    { "char": "@", "color": "#FFFFFF", "title": "自己" },
+    { "char": "m", "color": "#EE0000", "title": "怪物" }
 ];
 let chars = defaultChars;
 
 const defaultMap = 
-`~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-~~~~~~~~~~~~~~SSSSS~~~~~~~~~~~~~~~~~~~~~~
-~~~~~~~~~~~~SSzzzzzzzSSSSS~~~~~~~~~~~~~~~
-~~~~~~~~~~SSzHHfff...zzzzzS~~~~~~~~~~~~~~
-~~~~~~~~~~SzHH^Hfff.......zS~~~~~~~~~~~~~
-~~~~~~~~~SzzH^^^HHfff......zS~~~~~~~~~~~~
-~~~~~~~~SSzH^^!^^HHffc-----+-c~~~~~~~~~~~
-~~~~~~~~~~SzH^^HHHfff......|.zS~~~~~~~~~~
-~~~~~~~~~~Sz.HHHHflfffrrrrr=rrzS~~~~~~~~~
-~~~~~~~~~~SSz..HHlllrrrff../zSS~~~~~~~~~~
-~~~~~~~~~~SSzzz.Hflfffff../.zSS~~~~~~~~~~
-~~~~~~~~~~~SSz..ffffffc--+zSS~~~~~~~~~~~~
-~~~~~~~~~~~~~SSz.fff...,...zzSS~~~~~~~~~~
-~~~~~~~~~~~~~~Szz.f.....,...zzSS~~~~~~~~~
-~~~~~~~~~~~~~~~SSzzz.....,zzSS~~~~~~~~~~~
-~~~~~~~~~~~~~~~~~SSzz....z?S~~~~~~~~~~~~~
-~~~~~~~~~~~~~~~~~~~SSz.zSS~~~~~~~~~~~~~~~
-~~~~~~~~~~~~~~~~~~~~SSzS~~~~~~~~~~~~~~~~~
-~~~~~~~~~~~~~~~~~~~~~~S~~~~~~~~~~~~~~~~~~
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`;
+`~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~SSSSS~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~SSzzzzzzzSSSSS~~~~~~~~~~~~~~~
+~~~~~~~~~~~SSzhhfff...zzzzzS~~~~~~~~~~~~~~
+~~~~~~~~~~~Shhh^hfff.......zS~~~~~~~~~~~~~
+~~~~~~~~~~Shhh^^^hhfff......zS~~~~~~~~~~~~
+~~~~~~~~~SShh^^!^^hhffc-----+-c~~~~~~~~~~~
+~~~~~~~~~~~Shh^^^hhfff......|.zS~~~~~~~~~~
+~~~~~~~~~~~Shh^^^^flfffrrrrr=rrzS~~~~~~~~~
+~~~~~~~~~~~SSh^^^hlllrrrff../zSS~~~~~~~~~~
+~~~~~~~~~~~SSFh^^hflfffff../.zSS~~~~~~~~~~
+~~~~~~~~~~~~SFFh^ffffffc--+zSS~~~~~~~~~~~~
+~~~~~~~~~~~~SSFhh.fff.......zzSS~~~~~~~~~~
+~~~~~~~~~~~~SSFFh..f.........zzSS~~~~~~~~~
+~~~~~~~~~~~~SFFFhh.......?.zzSS~~~~~~~~~~~
+~~~~~~~~~~~~~SFFhhh........zS~~~~~~~~~~~~~
+~~~~~~~~~~~~~SShhhh~.....zzz~~~~~~~~~~~~~~
+~~~~~~~~~~~~~SSShhh.....zzz~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~SShhhhh...zS~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~SSh.hhh.zzS~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~ShhhhhhzzS~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~ShhhhhzSS~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~SShhShSS~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~SSSSSS~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~SS~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`;
 
 const toolbar = document.querySelector('.toolbar');
 const resizeHandle = document.querySelector('.resize-handle');
