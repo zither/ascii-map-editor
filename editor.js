@@ -100,8 +100,19 @@ document.addEventListener('mouseup', () => {
   isResizing = false;
 });
 
-const canvas = document.getElementById('mapCanvas');
-const ctx = canvas.getContext('2d');
+//@link https://stackoverflow.com/questions/15661339/how-do-i-fix-blurry-text-in-my-html5-canvas
+function createHiPPICanvas(canvas, width, height) {
+    const ratio = window.devicePixelRatio;
+
+    canvas.width = width * ratio;
+    canvas.height = height * ratio;
+    canvas.style.width = width + "px";
+    canvas.style.height = height + "px";
+    canvas.getContext("2d").scale(ratio, ratio);
+
+    return canvas;
+}
+
 let mapData = [];
 let viewX = 0;
 let viewY = 0;
@@ -131,6 +142,9 @@ let dragStartY = 0; // 拖动开始时的Y坐标
 let initialViewX = 0; // 拖动开始时的viewX
 let initialViewY = 0; // 拖动开始时的viewY
 
+
+const canvas = document.getElementById('mapCanvas');
+const ctx = canvas.getContext('2d');
 
 window.onload = function() {
     const mapContainer = document.getElementsByClassName('map-container')[0];
@@ -186,12 +200,13 @@ document.getElementById('loadForm').addEventListener('submit', function (event) 
 });
 
 function renderMap() {
-    canvas.width = gridWidth * fontGridWidth; // 每个字符的宽度为16像素
-    canvas.height = gridHeight * fontGridHeight; // 每个字符的高度为24像素
+    createHiPPICanvas(canvas, gridWidth * fontGridWidth, gridHeight * fontGridHeight);
+    //canvas.width = gridWidth * fontGridWidth; // 每个字符的宽度为16像素
+    //canvas.height = gridHeight * fontGridHeight; // 每个字符的高度为24像素
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = backgroundColor; // 设置背景颜色为黑色
     ctx.fillRect(0, 0, canvas.width, canvas.height); // 填充背景颜色
-    ctx.font = `bold ${fontSize}px ${fontFamily}`;
+    ctx.font = `${fontSize}px ${fontFamily}`;
     ctx.imageSmoothingEnabled = true; // 启用抗锯齿
     for (let y = 0; y < gridHeight; y++) {
         for (let x = 0; x < gridWidth; x++) {
