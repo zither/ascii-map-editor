@@ -88,8 +88,8 @@ document.addEventListener('mousemove', (e) => {
     // 重新计算 gridWidth 和 gridHeight
     const containerWidth = mapContainer.clientWidth;
     const containerHeight = mapContainer.clientHeight;
-    gridWidth = Math.floor(containerWidth / 16); // 每个字符的宽度为16像素
-    gridHeight = Math.floor(containerHeight / 24); // 每个字符的高度为24像素
+    gridWidth = Math.floor(containerWidth / fontGridWidth); 
+    gridHeight = Math.floor(containerHeight / fontGridHeight); 
 
     // 重新渲染地图
     renderMap();
@@ -113,6 +113,11 @@ let xOffset = 10;
 let yOffset = 10;
 let backgroundColor = '#000000';
 
+let fontGridWidth = 16;
+let fontGridHeight = 24;
+let fontSize = 20;
+let fontFamily = 'DejaVu Sans, Consolas, Arial, sans-serif';
+
 let mapWidth = 0;
 let mapHeight = 0;
 
@@ -132,8 +137,8 @@ window.onload = function() {
     if (mapContainer) {
         const containerWidth = mapContainer.clientWidth;
         const containerHeight = mapContainer.clientHeight;
-        gridWidth = Math.floor(containerWidth / 16); // 每个字符的宽度为16像素
-        gridHeight = Math.floor(containerHeight / 24); // 每个字符的高度为24像素
+        gridWidth = Math.floor(containerWidth / fontGridWidth); // 每个字符的宽度为16像素
+        gridHeight = Math.floor(containerHeight / fontGridHeight); // 每个字符的高度为24像素
     }
     setCharButtons();
 };
@@ -181,12 +186,13 @@ document.getElementById('loadForm').addEventListener('submit', function (event) 
 });
 
 function renderMap() {
-    canvas.width = gridWidth * 16; // 每个字符的宽度为16像素
-    canvas.height = gridHeight * 24; // 每个字符的高度为24像素
+    canvas.width = gridWidth * fontGridWidth; // 每个字符的宽度为16像素
+    canvas.height = gridHeight * fontGridHeight; // 每个字符的高度为24像素
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = backgroundColor; // 设置背景颜色为黑色
     ctx.fillRect(0, 0, canvas.width, canvas.height); // 填充背景颜色
-    ctx.font = '12px monospace';
+    ctx.font = `bold ${fontSize}px ${fontFamily}`;
+    ctx.imageSmoothingEnabled = true; // 启用抗锯齿
     for (let y = 0; y < gridHeight; y++) {
         for (let x = 0; x < gridWidth; x++) {
             const mapX = viewX + x;
@@ -194,7 +200,7 @@ function renderMap() {
             if (mapX < mapWidth && mapY < mapHeight && mapData[mapY] && mapData[mapY][mapX]) {
                 ctx.fillStyle = getColorForChar(mapData[mapY][mapX]);
                 let char = mapData[mapY][mapX];
-                ctx.fillText(char, x * 16, y * 24 + 12);
+                ctx.fillText(char, x * fontGridWidth, y * fontGridHeight + fontSize);
             }
         }
     }
@@ -316,10 +322,10 @@ function drawSelectionBox() {
 
 function replaceSelectedChars() {
     // 确保 startX 和 startY 总是小于 endX 和 endY
-    const startMapX = Math.min(Math.floor(startX / 16) + viewX, Math.floor(endX / 16) + viewX);
-    const startMapY = Math.min(Math.floor(startY / 24) + viewY, Math.floor(endY / 24) + viewY);
-    const endMapX = Math.max(Math.floor(startX / 16) + viewX, Math.floor(endX / 16) + viewX);
-    const endMapY = Math.max(Math.floor(startY / 24) + viewY, Math.floor(endY / 24) + viewY);
+    const startMapX = Math.min(Math.floor(startX / fontGridWidth) + viewX, Math.floor(endX / fontGridWidth) + viewX);
+    const startMapY = Math.min(Math.floor(startY / fontGridHeight) + viewY, Math.floor(endY / fontGridHeight) + viewY);
+    const endMapX = Math.max(Math.floor(startX / fontGridWidth) + viewX, Math.floor(endX / fontGridWidth) + viewX);
+    const endMapY = Math.max(Math.floor(startY / fontGridHeight) + viewY, Math.floor(endY / fontGridHeight) + viewY);
 
     for (let y = startMapY; y <= endMapY; y++) {
         for (let x = startMapX; x <= endMapX; x++) {
@@ -336,14 +342,14 @@ canvas.addEventListener('mousemove', function (event) {
     if (isDragging) {
         const deltaX = event.clientX - dragStartX;
         const deltaY = event.clientY - dragStartY;
-        viewX = initialViewX - Math.floor(deltaX / 16); // 16是每个字符的宽度
-        viewY = initialViewY - Math.floor(deltaY / 24); // 24是每个字符的高度
+        viewX = initialViewX - Math.floor(deltaX / fontGridWidth); // 16是每个字符的宽度
+        viewY = initialViewY - Math.floor(deltaY / fontGridHeight); // 24是每个字符的高度
         renderMap();
     } else {
 
         const rect = canvas.getBoundingClientRect();
-        const x = Math.floor((event.clientX - rect.left) / 16);
-        const y = Math.floor((event.clientY - rect.top) / 24);
+        const x = Math.floor((event.clientX - rect.left) / fontGridWidth);
+        const y = Math.floor((event.clientY - rect.top) / fontGridHeight);
         const mapX = viewX + x;
         const mapY = viewY + y;
         document.getElementById('mouse-coords').textContent = `${mapX}, ${mapY}`;
@@ -368,8 +374,8 @@ canvas.addEventListener('mousedown', function (event) {
     }
 
     const rect = canvas.getBoundingClientRect();
-    const x = Math.floor((event.clientX - rect.left) / 16);
-    const y = Math.floor((event.clientY - rect.top) / 24);
+    const x = Math.floor((event.clientX - rect.left) / fontGridWidth);
+    const y = Math.floor((event.clientY - rect.top) / fontGridHeight);
     const mapX = viewX + x;
     const mapY = viewY + y;
 
