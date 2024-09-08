@@ -125,9 +125,10 @@ let yOffset = 10;
 let backgroundColor = '#000000';
 
 let fontGridWidth = 16;
-let fontGridHeight = 24;
-let fontSize = 20;
-let fontFamily = 'DejaVu Sans, Consolas, Arial, sans-serif';
+let fontGridHeight = 16;
+let fontSize = 18;
+let fontFamily = '"Noto Mono", "IBM Plex Mono", "WenQuanYi Micro Hei Mono", monospace';
+
 
 let mapWidth = 0;
 let mapHeight = 0;
