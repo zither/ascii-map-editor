@@ -28,7 +28,7 @@
     { "char": "F", "color": "#008800", "title": "原始森林" },
     { "char": "L", "color": "#FF5000", "title": "岩浆湖" },
     { "char": "S", "color": "#44CCCC", "title": "浅滩" },
-    { "char": "^", "color": "#5F6E7C", "title": "高山" },
+    { "char": "^", "color": "#718292", "title": "高山" },
     { "char": "c", "color": "#5F5655", "title": "城镇" },
     { "char": "f", "color": "#00B600", "title": "树林" },
     { "char": "i", "color": "#FFFFFF", "title": "冰" },
