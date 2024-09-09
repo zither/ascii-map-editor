@@ -1,6 +1,6 @@
 # ASCII Map Editor
 
-![Ascii Map Editor](./images/screenshot.png)
+![Ascii Map Editor](./assets/screenshot.png)
 
 A simple tool for creating and editing ASCII maps.
 
@@ -26,4 +26,6 @@ A simple tool for creating and editing ASCII maps.
 
 ## Demo
 
-[ASCII Map Editor Demo](https://zither.github.io/ascii-map-editor/)
+Editor Demo: [https://zither.github.io/ascii-map-editor/](https://zither.github.io/ascii-map-editor/)
+
+Map Viewer Demo: [https://zither.github.io/ascii-map-editor/leaflet.html](https://zither.github.io/ascii-map-editor/leaflet.html)
