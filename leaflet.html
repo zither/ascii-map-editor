@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Leaflet 加载自定义瓦片地图</title>
+    <style>
+        #map {
+            width: 100%;
+            height: 100vh;
+        }
+    </style>
+    <link rel="stylesheet" href="/assets/leaflet.css" />
+    <script src="/assets/leaflet.js"></script>
+</head>
+
+<body>
+    <div id="map"></div>
+    <script>
+        const cellSize = 1; // 瓦片大小为4x4像素
+        // 定义地图的宽度和高度
+        const mapWidth = 1000 * cellSize;
+        const mapHeight = 1000 * cellSize;
+
+        L.CRS.Simple.transformation = new L.Transformation(1, 0, 1, 0); // 定义投影坐标的转换关系
+        // 创建地图对象
+        const map = L.map('map', {
+            crs: L.CRS.Simple, // 使用简单的坐标参考系统
+            minZoom: 0, // 最小缩放级别
+            maxZoom: 3, // 最大缩放级别
+            center: [300 * cellSize, 340 * cellSize], // 地图中心点设置为投影坐标的中心点
+            zoom: 0 // 初始缩放级别设置为0
+        });
+
+        // 自定义瓦片层
+        const tileLayer = L.tileLayer('tiles/{z}/{x}_{y}.png', {
+            tileSize: 256, // 瓦片大小
+            noWrap: true, // 禁用瓦片循环
+            bounds: [[0, 0], [mapHeight, mapWidth]], // 移除这个设置
+        }).addTo(map);
+
+        // 打印瓦片路径
+        tileLayer.on('tileload', function(event) {
+            console.log('Loaded tile:', event.url);
+        });
+    </script>
+</body>
+
+</html>
