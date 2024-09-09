@@ -2,7 +2,7 @@
 
 中文|[English](./README_en.md)
 
-![Ascii Map Editor](./images/screenshot.png)
+![Ascii Map Editor](./assets/screenshot.png)
 
 一个简单的创建和编辑 ASCII 地图的工具。
 
@@ -29,4 +29,6 @@
 
 ## Demo
 
-[ASCII Map Editor Demo](https://zither.github.io/ascii-map-editor/)
+编辑器：[https://zither.github.io/ascii-map-editor/](https://zither.github.io/ascii-map-editor/)
+
+地图预览：[https://zither.github.io/ascii-map-editor/leaflet.html](https://zither.github.io/ascii-map-editor/leaflet.html)
