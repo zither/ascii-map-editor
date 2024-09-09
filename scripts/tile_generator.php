@@ -5,6 +5,8 @@ class TileGenerator
     private $tileSize = 256;
     private $defaultChar = '~';
     private $defaultCharColor = '#0000AA';
+    private $tileDir = __DIR__ . '/tiles';
+    private $fontPath = __DIR__ . '/NotoMono-Regular.ttf';
     private $width;
     private $height;
     private $map = [];
@@ -12,101 +14,114 @@ class TileGenerator
     private $colors = [];
     private $minFontSize = 8;
     private $cellSize = 16;
-    
-    public function __construct(string $mapFilePath)
+
+    public function __construct(string $mapFilePath, string $charFilePath)
     {
-        // 读取ASCII地图文件内容
+        if (!file_exists($mapFilePath)) {
+            throw new Exception('Map file not found');
+        }
         $asciiMap = file_get_contents($mapFilePath);
         if ($asciiMap === false) {
-            throw new Exception("Failed to read ASCII map file.");
+            throw new Exception("Failed to read map file.");
         }
 
-        // 将ASCII地图数据按行分割
-        $this->map = explode("\n", $asciiMap);
-
-        // 获取地图的宽度和高度
-        $this->width = strlen($this->map[0]);
-        $this->height = count($this->map);
-
-        // 读取chars.json文件内容
-        $charsJson = file_get_contents(__DIR__ . '/../examples/chars.json');
+        if (!file_exists($charFilePath)) {
+            throw new Exception('Char file not found');
+        }
+        $charsJson = file_get_contents($charFilePath);
         if ($charsJson === false) {
-            throw new Exception("Failed to read chars.json file.");
+            throw new Exception("Failed to read char file.");
         }
         $this->chars = json_decode($charsJson, true);
 
-        // 定义颜色映射
+        $this->map = explode("\n", $asciiMap);
+        $this->width = strlen($this->map[0]);
+        $this->height = count($this->map);
         foreach ($this->chars as $charDef) {
             $this->colors[$charDef['char']] = $this->transColor($charDef['color']);
         }
     }
 
-    public function generateTiles(int $zoomLevel, $cellSize = 16) 
+    public function setTileDir(string $dir)
     {
-        if (!file_exists(__DIR__ . "/../tiles/{$zoomLevel}")) {
-            mkdir(__DIR__ . "/../tiles/{$zoomLevel}", 0777, true);
+        $this->tileDir = $dir;
+    }
+
+    public function setFontPath(string $fontPath)
+    {
+        $this->fontPath = $fontPath;
+    }
+
+    public function generateTiles(int $zoomLevel, $cellSize = 16)
+    {
+        if (!file_exists($this->tileDir . "/{$zoomLevel}")) {
+            mkdir($this->tileDir . "/{$zoomLevel}", 0777, true);
         }
-        // 计算需要生成的Tile数量
         $numTilesX = ceil($this->width / ($this->tileSize / $cellSize));
         $numTilesY = ceil($this->height / ($this->tileSize / $cellSize));
-
         $this->cellSize = $cellSize;
-
-        // 遍历每个Tile
         for ($tileY = 0; $tileY < $numTilesY; $tileY++) {
             for ($tileX = 0; $tileX < $numTilesX; $tileX++) {
-                // 创建一个空白图像
-                $image = imagecreatetruecolor($this->tileSize, $this->tileSize);
-
-                // 遍历Tile内的每个格子
-                for ($cellY = 0; $cellY < ($this->tileSize / $cellSize); $cellY++) {
-                    for ($cellX = 0; $cellX < ($this->tileSize / $cellSize); $cellX++) {
-                        // 计算在原始地图中的坐标
-                        $mapX = $tileX * ($this->tileSize / $cellSize) + $cellX;
-                        $mapY = $tileY * ($this->tileSize / $cellSize) + $cellY;
-                        // 检查是否超出地图边界
-                        if ($mapX < $this->width && $mapY < $this->height) {
-                            // 获取当前字符
-                            $char = $this->map[$mapY][$mapX];
-                        } else {
-                            $char = $this->defaultChar;
-                        }
-                        $color = $this->colors[$char] ?? $this->transColor($this->defaultCharColor);
-                        $fontSize  = $this->getFontSizeForChar();
-                        if ($fontSize) {
-                            $this->fillChar($image, $char, $cellX, $cellY, $color, $fontSize);
-                        } else {
-                            $this->fillRect($image, $cellX, $cellY, $color);
-                        }
-
-                    }
-                }
-
-                // 保存Tile图像，包含缩放级别
-                $tileFileName = __DIR__ . "/../tiles/{$zoomLevel}/{$tileX}_{$tileY}.png";
-                imagepng($image, $tileFileName);
-
-                // 释放内存
-                imagedestroy($image);
+                $tileFileName = $this->tileDir . "/{$zoomLevel}/{$tileX}_{$tileY}.png";
+                $this->generateTile($tileX, $tileY, $zoomLevel, $cellSize, $tileFileName);
             }
         }
     }
 
+    public function generateTile(int $tileX, int $tileY, int $zoomLevel, int $cellSize = null, string $savePath = null)
+    {
+        if (!is_null($cellSize)) {
+            $this->cellSize = $cellSize;
+        } else {
+            $this->cellSize = $cellSize = pow(2, $zoomLevel);
+        }
+
+        $image = imagecreatetruecolor($this->tileSize, $this->tileSize);
+        for ($cellY = 0; $cellY < ($this->tileSize / $cellSize); $cellY++) {
+            for ($cellX = 0; $cellX < ($this->tileSize / $cellSize); $cellX++) {
+                $mapX = $tileX * ($this->tileSize / $cellSize) + $cellX;
+                $mapY = $tileY * ($this->tileSize / $cellSize) + $cellY;
+                if ($mapX < $this->width && $mapY < $this->height) {
+                    $char = $this->map[$mapY][$mapX];
+                } else {
+                    $char = $this->defaultChar;
+                }
+                $color = $this->colors[$char] ?? $this->transColor($this->defaultCharColor);
+                $fontSize  = $this->getFontSizeForChar();
+                if ($fontSize) {
+                    $this->fillChar($image, $char, $cellX, $cellY, $color, $fontSize);
+                } else {
+                    $this->fillRect($image, $cellX, $cellY, $color);
+                }
+
+            }
+        }
+        if ($savePath) {
+            imagepng($image, $savePath);
+            imagedestroy($image);
+        } else {
+            ob_start();
+            imagepng($image);
+            $content = ob_get_contents();
+            ob_end_clean();
+            imagedestroy($image);
+            return $content;
+        }
+    }
+
+
     public function fillChar($image, $char, $cellX, $cellY, $color, $font_size = 12)
     {
-        // 计算格子中心位置
         $cellCenterX = $cellX * $this->cellSize + $this->cellSize / 2;
         $cellCenterY = $cellY * $this->cellSize + $this->cellSize / 2;
-        $fontPath = __DIR__ . '/NotoMono-Regular.ttf';
-        if (!file_exists($fontPath)) {
-            throw new Exception("Font file not found: $fontPath");
+        if (!file_exists($this->fontPath)) {
+            throw new Exception("Font file not found: $this->fontPath");
         }
-        imagettftext($image, $font_size, 0, $cellCenterX - 4, $cellCenterY + 4, $color, $fontPath, $char);
+        imagettftext($image, $font_size, 0, $cellCenterX - 4, $cellCenterY + 4, $color, $this->fontPath, $char);
     }
 
     public function fillRect($image, $cellX, $cellY, $color)
     {
-        // 计算格子左上角位置
         $cellTopLeftX = $cellX * $this->cellSize;
         $cellTopLeftY = $cellY * $this->cellSize;
         imagefilledrectangle($image, $cellTopLeftX, $cellTopLeftY, $cellTopLeftX + $this->cellSize - 1, $cellTopLeftY + $this->cellSize - 1, $color);
@@ -125,36 +140,45 @@ class TileGenerator
 
     private function transColor($color)
     {
-        // 将默认颜色从 #RRGGBB 格式转换为整数格式
         $charColor = sscanf($color, '#%02x%02x%02x');
         return imagecolorallocate(imagecreatetruecolor(1, 1), $charColor[0], $charColor[1], $charColor[2]);
     }
 }
 
-try {
-    // 获取命令行参数
-    $options = getopt("m:z:c:");
+if (php_sapi_name() === 'cli') {
+    try {
+        $options = getopt("m:c:z:s:");
+        if (empty($options)) {
+            throw new Exception("Usage: php tile.php -m <mapFilePath> -c <charFilePath> (-z <zoomLevel>) (-s <cellSize>)\n");
+        }
+        $mapFilePath = $options['m'];
+        $charFilePath = $options['c'];
+        $zoomLevel = (int)($options['z'] ?? 0);
+        $cellSize = isset($options['s']) ? (int)$options['s'] : pow(2, $zoomLevel);
+        $generator = new TileGenerator($mapFilePath, $charFilePath);
+        $generator->generateTiles($zoomLevel, $cellSize);
+        echo "Tile images generated successfully.\n";
+    } catch (Exception $e) {
+        echo $e->getMessage(), "\n";
+    }
+}
 
-    // 检查是否提供了所有必需的参数
-    if (empty($options)) {
-        throw new Exception("Usage: php tile.php -m <mapFilePath> (-z <zoomLevel>) (-c <cellSize>)\n");
+if (php_sapi_name() === 'cli-server') {
+    $requestUri =$_SERVER['REQUEST_URI'] ?? '';
+    if (preg_match('/\.(?:html|js|css)$/', $requestUri)) {
+        return false; 
     }
 
-    // 获取参数值
-    $mapFilePath = $options['m'];
-    // 检查文件是否存在
-    if (!file_exists($mapFilePath)) {
-        throw new Exception("Map file not found: $mapFilePath");
+    if (empty($requestUri) || !preg_match('/\/(\d+)\/(\d+)_(\d+)\.png/', $requestUri, $matches)) {
+        printf('Expected URI: http://%s:%s/z/x_y.png', $_SERVER['SERVER_NAME'], $_SERVER['SERVER_PORT']);
+        exit;
     }
+    $z = (int)$matches[1];
+    $x = (int)$matches[2];
+    $y = (int)$matches[3];
 
-
-    $zoomLevel = (int)($options['z'] ?? 0);
-    $cellSize = (int)($options['c']  ?? 1);
-
-    // 创建生成器实例
-    $generator = new TileGenerator($mapFilePath);
-    $generator->generateTiles($zoomLevel, $cellSize);
-    echo "Tile images generated successfully.\n";
-} catch (Exception $e) {
-    echo $e->getMessage(),"\n";
+    $mapFile = __DIR__ . '/../examples/map.txt';
+    $charFile = __DIR__ . '/../examples/chars.json';
+    $generator = new TileGenerator($mapFile, $charFile);
+    echo $generator->generateTile($x, $y, $z);
 }

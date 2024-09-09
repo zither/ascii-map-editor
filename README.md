@@ -32,3 +32,21 @@
 编辑器：[https://zither.github.io/ascii-map-editor/](https://zither.github.io/ascii-map-editor/)
 
 地图预览：[https://zither.github.io/ascii-map-editor/leaflet.html](https://zither.github.io/ascii-map-editor/leaflet.html)
+
+
+## 地图动态预览
+
+```
+$ cd scripts
+$ php -S localhost:8888 tile_generator.php
+```
+
+然后用浏览器打开 `http://localhost:8888/leaflet_demo.html`
+
+## 生成瓦片图片
+
+```
+$ cd scripts
+$ php tile_generator.php  //查看使用方法
+$ php tile_generator.php -m ../examples/map.txt -c ../examples/chars.json -z 0 -s 1
+```

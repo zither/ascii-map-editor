@@ -29,3 +29,20 @@ A simple tool for creating and editing ASCII maps.
 Editor Demo: [https://zither.github.io/ascii-map-editor/](https://zither.github.io/ascii-map-editor/)
 
 Map Viewer Demo: [https://zither.github.io/ascii-map-editor/leaflet.html](https://zither.github.io/ascii-map-editor/leaflet.html)
+
+## Dynamic Map Preview
+
+```
+$ cd scripts
+$ php -S localhost:8888 tile_generator.php
+```
+
+Then open `http://localhost:8888/leaflet_demo.html` in your browser.
+
+## Generate Tile Images
+
+```
+$ cd scripts
+$ php tile_generator.php  //View usage
+$ php tile_generator.php -m ../examples/map.txt -c ../examples/chars.json -z 0 -s 1
+```
