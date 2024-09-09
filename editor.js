@@ -10,7 +10,7 @@ const defaultChars = [
     { "char": "V", "color": "#AA0000", "title": "火山" },
     { "char": "b", "color": "#CFC4A5", "title": "沙滩" },
     { "char": "d", "color": "#EEBB22", "title": "沙漠" },
-    { "char": "h", "color": "#724C00", "title": "丘陵" },
+    { "char": "h", "color": "#996600", "title": "丘陵" },
     { "char": "j", "color": "#00AA00", "title": "丛林" },
     { "char": "r", "color": "#6699FF", "title": "河流" },
     { "char": "t", "color": "#00FF00", "title": "苔原" },
